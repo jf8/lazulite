@@ -6,86 +6,189 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
+/**
+ * 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ */
 package com.daphne.lazulite.sys.resource.service;
 
+import com.daphne.lazulite.common.service.BaseService;
+import com.daphne.lazulite.sys.auth.service.UserAuthService;
 import com.daphne.lazulite.sys.resource.entity.Resource;
-import com.daphne.lazulite.sys.resource.repository.ResourceRepository;
-import com.daphne.lazulite.sys.role.entity.Role;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.daphne.lazulite.sys.resource.entity.tmp.Menu;
+import com.daphne.lazulite.sys.user.entity.User;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Created by junfu on 2016/5/12.
+ * <p>User: 
+ * <p>Date: 13-2-4 下午3:01
+ * <p>Version: 1.0
  */
 @Service
-public class ResourceService implements FilterInvocationSecurityMetadataSource {
-
-    public static final  Logger logger= LoggerFactory.getLogger(ResourceService.class);
-
-    private static Map<String,Collection<ConfigAttribute>> resourceMap=null;
+public class ResourceService extends BaseService<Resource, Long> {
 
     @Autowired
-    private ResourceRepository resourceRepository;
+    private UserAuthService userAuthService;
 
-    @PostConstruct
-    public void init() throws Exception{
-        resourceMap= Maps.newHashMap();
-        for (Resource item:resourceRepository.findAll()
-             ) {
-            resourceMap.put(item.getUrl(),listToCollection(item.getRoles()));
+    /**
+     * 得到真实的资源标识  即 父亲:儿子
+     * @param resource
+     * @return
+     */
+    public String findActualResourceIdentity(Resource resource) {
+
+        if(resource == null) {
+            return null;
         }
-    }
+        
+        StringBuilder s = new StringBuilder(resource.getIdentity()==null?"":resource.getIdentity());
 
-    public Collection<ConfigAttribute> listToCollection(List<Role> roles){
-        List<ConfigAttribute> list= Lists.newArrayList();
-        for (Role role :
-                roles) {
-            list.add(new SecurityConfig(role.getName()));
+        boolean hasResourceIdentity = !StringUtils.isEmpty(resource.getIdentity());
+
+        Resource parent = findOne(resource.getParentId());
+        while(parent != null) {
+            if(!StringUtils.isEmpty(parent.getIdentity())) {
+                s.insert(0, parent.getIdentity() + ":");
+                hasResourceIdentity = true;
+            }
+            parent = findOne(parent.getParentId());
         }
-        return list;
-    }
 
-    @Override
-    public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-        String url=((FilterInvocation)object).getRequestUrl();
-        logger.debug("为{url}获取属性",url);
-        Iterator<String> it= resourceMap.keySet().iterator();
-        AntPathMatcher urlMatcher=new AntPathMatcher();
-        while(it.hasNext()){
-            String resURL=it.next();
-            if(urlMatcher.match(resURL,url)){
-                Collection<ConfigAttribute> returnCollection=resourceMap.get(resURL);
-                return returnCollection;
+        //如果用户没有声明 资源标识  且父也没有，那么就为空
+        if(!hasResourceIdentity) {
+            return "";
+        }
+
+
+        //如果最后一个字符是: 因为不需要，所以删除之
+        int length = s.length();
+        if(length > 0 && s.lastIndexOf(":") == length - 1) {
+            s.deleteCharAt(length - 1);
+        }
+
+        //如果有儿子 最后拼一个*
+        boolean hasChildren = false;
+        for(Resource r : findAll()) {
+            if(resource.getId().equals(r.getParentId())) {
+                hasChildren = true;
+                break;
             }
         }
-        return null;
-    }
-
-    @Override
-    public Collection<ConfigAttribute> getAllConfigAttributes() {
-        Set<ConfigAttribute> allAttributes= Sets.newHashSet();
-        for (Map.Entry<String,Collection<ConfigAttribute>> entry:
-              resourceMap.entrySet()) {
-            allAttributes.addAll(entry.getValue());
+        if(hasChildren) {
+            s.append(":*");
         }
-        return allAttributes;
+
+        return s.toString();
     }
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return true;
+    public List<Menu> findMenus(User user) {
+//        Pageable pageable =
+//                Pageable.newSearchable()
+//                        .addSearchFilter("show", SearchOperator.eq, true)
+//                        .addSort(new Sort(Sort.Direction.DESC, "parentId", "weight"));
+
+        List<Resource> resources = findAll();
+
+        Set<String> userPermissions = userAuthService.findStringPermissions(user);
+
+        Iterator<Resource> iter = resources.iterator();
+        while (iter.hasNext()) {
+            if (!hasPermission(iter.next(), userPermissions)) {
+                iter.remove();
+            }
+        }
+
+        return convertToMenus(resources);
     }
+
+    private boolean hasPermission(Resource resource, Set<String> userPermissions) {
+        String actualResourceIdentity = findActualResourceIdentity(resource);
+        if (StringUtils.isEmpty(actualResourceIdentity)) {
+            return true;
+        }
+
+        for (String permission : userPermissions) {
+            if (hasPermission(permission, actualResourceIdentity)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean hasPermission(String permission, String actualResourceIdentity) {
+
+        //得到权限字符串中的 资源部分，如a:b:create --->资源是a:b
+        String permissionResourceIdentity = permission.substring(0, permission.lastIndexOf(":"));
+
+        //如果权限字符串中的资源 是 以资源为前缀 则有权限 如a:b 具有a:b的权限
+        if(permissionResourceIdentity.startsWith(actualResourceIdentity)) {
+            return true;
+        }
+
+
+        //模式匹配
+        WildcardPermission p1 = new WildcardPermission(permissionResourceIdentity);
+        WildcardPermission p2 = new WildcardPermission(actualResourceIdentity);
+
+        return p1.implies(p2) || p2.implies(p1);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static List<Menu> convertToMenus(List<Resource> resources) {
+
+        if (resources.size() == 0) {
+            return Collections.EMPTY_LIST;
+        }
+
+        Menu root = convertToMenu(resources.remove(resources.size() - 1));
+
+        recursiveMenu(root, resources);
+        List<Menu> menus = root.getChildren();
+        removeNoLeafMenu(menus);
+
+        return menus;
+    }
+
+    private static void removeNoLeafMenu(List<Menu> menus) {
+        if (menus.size() == 0) {
+            return;
+        }
+        for (int i = menus.size() - 1; i >= 0; i--) {
+            Menu m = menus.get(i);
+            removeNoLeafMenu(m.getChildren());
+            if (!m.isHasChildren() && StringUtils.isEmpty(m.getUrl())) {
+                menus.remove(i);
+            }
+        }
+    }
+
+    private static void recursiveMenu(Menu menu, List<Resource> resources) {
+        for (int i = resources.size() - 1; i >= 0; i--) {
+            Resource resource = resources.get(i);
+            if (resource.getParentId().equals(menu.getId())) {
+                menu.getChildren().add(convertToMenu(resource));
+                resources.remove(i);
+            }
+        }
+
+        for (Menu subMenu : menu.getChildren()) {
+            recursiveMenu(subMenu, resources);
+        }
+    }
+
+    private static Menu convertToMenu(Resource resource) {
+        return new Menu(resource.getId(), resource.getName(), resource.getIcon(), resource.getUrl());
+    }
+
 }

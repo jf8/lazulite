@@ -13,10 +13,13 @@
  */
 package com.daphne.lazulite.sys.resource.repository;
 
+import com.daphne.lazulite.common.repository.BaseRepository;
 import com.daphne.lazulite.sys.resource.entity.Resource;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
-
-public interface ResourceRepository extends PagingAndSortingRepository<Resource, Long> {
-
+/**
+ * <p>User: 
+ * <p>Date: 13-2-4 下午3:00
+ * <p>Version: 1.0
+ */
+public interface ResourceRepository extends BaseRepository<Resource, Long> {
 }

@@ -20,7 +20,7 @@
 			<p th:if="${param.logout}" class="alert">退出成功</p>
 			<p th:if="${param.error}" class="alert alert-error">登录失败，请重试</p>
 			<h2>Login with Username and Password.</h2>
-			<form name="form" th:action="@{/login}" action="/login" method="POST">
+			<form id="form" name="form" th:action="@{/login}" action="/login" method="POST" onsubmit="false">
 				<fieldset>
 					<input type="text" name="username" value="" placeholder="Username" />
 					<input type="password" name="password" placeholder="Password" />
@@ -32,3 +32,31 @@
 	</div>
 </body>
 </html>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#form").submit(function(){
+			var usernameval=$("input[name='username']").val();
+			var passwordval=$("input[name='password']").val();
+
+
+			$.ajax({
+				type: "POST",
+				url: "login",
+				contentType: "application/json; charset=utf-8",
+				data:JSON.stringify( {username:usernameval,password:passwordval}),
+				dataType: "json",
+				success: function (message) {
+					if (message) {
+						console.log(message);
+					}
+				},
+				error: function (message) {
+					console.log(message);
+				}
+			});
+
+		return false;
+		});
+	});
+</script>

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="nodejs package manager  start" type="js.build_tools.npm" factoryName="npm">
+    <package-json value="$PROJECT_DIR$/src/main/resources/public/master/package.json" />
+    <command value="start" />
+    <envs />
+    <method />
+  </configuration>
+</component>

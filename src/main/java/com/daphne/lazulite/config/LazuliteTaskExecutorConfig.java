@@ -20,6 +20,7 @@ import java.util.concurrent.Executor;
  * Created by junfu on 2016/5/7.
  */
 @Configuration
+@EnableAsync
 public class LazuliteTaskExecutorConfig implements AsyncConfigurer {
 
     @Override

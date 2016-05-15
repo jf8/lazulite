@@ -9,14 +9,21 @@
 package com.daphne.lazulite.config;
 
 
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.daphne.lazulite.example.spring.interceptor.DemoInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,9 +53,21 @@ public class LazuliteWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter{
         configurer.setUseRegisteredSuffixPatternMatch(true);
     }
 
+
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 
     }
 
+
+
+    //@Bean
+    public FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
+        FastJsonHttpMessageConverter fastJsonHttpMessageConverter=new FastJsonHttpMessageConverter();
+        List<MediaType> mediaTypes=new ArrayList<MediaType>();
+        mediaTypes.add(MediaType.APPLICATION_JSON);
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(mediaTypes);
+        return fastJsonHttpMessageConverter;
+    }
 }
