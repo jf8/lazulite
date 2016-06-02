@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="init" type="js.build_tools.npm" factoryName="npm">
+    <package-json value="$PROJECT_DIR$/material-seed/master/package.json" />
+    <command value="start" />
+    <envs />
+    <method />
+  </configuration>
+</component>

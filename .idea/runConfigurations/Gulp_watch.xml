@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Gulp watch" type="js.build_tools.gulp" factoryName="Gulp.js">
     <node-options />
-    <gulpfile>$PROJECT_DIR$/src/main/resources/public/master/gulpfile.js</gulpfile>
+    <gulpfile>$PROJECT_DIR$/material-seed/master/gulpfile.js</gulpfile>
     <tasks>
       <task>watch</task>
     </tasks>

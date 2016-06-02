@@ -1,0 +1,116 @@
+### wechat auth url 
+wechat.authUrl=https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect
+### wechat get user info url
+wechat.userInfoUrl=https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
+
+
+### web context url 
+web.rootUrl=http://o2o.dev.sigmad.net/o2o/
+### nearShop url
+web.nearShopUrl=http://oa.mgogo.com/daphnewp/shop.php
+#web.nearShopUrl=@web.nearShopUrl@
+### personnal center url
+web.personnalCenterUrl=http://oa.mgogo.com/daphnewp/user.php
+#web.personnalCenterUrl=@web.personnalCenterUrl@
+### my favorable url
+web.myFavorableUrl=http://oa.mgogo.com/daphnewp/ka_juan.php
+#web.myFavorableUrl=@web.myFavorableUrl@
+### to the mall url  
+web.toTheMallUrl=http://ok.jd.com/m/index-23960.htm
+
+### defined by walter.xu
+schedule_shopCouponOpen=0
+schedule_wechatMessageOpen=1
+schedule_threadPoolSize=10
+schedule_taskCountAtOnce=20
+
+### sms configuration
+sms.address=http://218.83.242.235:8080/Sender.asmx?wsdl
+sms.username=madhouse
+sms.password=madhouse20150623
+sms.invalidTime=2
+#sms.address=@sms.address@
+#sms.username=@sms.username@
+#sms.password=@sms.password@
+#sms.invalidTime=@sms.invalidTime@
+
+## daphne ftp configure path
+config.daphneFTPFolder=/services/data/ftp/daphne
+#config.daphneFTPFolder=@config.daphneFTPFolder@
+config.daphneLocalFolder=/services/data/backup
+#config.daphneLocalFolder=@config.daphneLocalFolder@
+
+config.daphneFTPFileOfflinePrefix=TicketOffline
+config.daphneFTPFileOnlinePrefix=TicketOnline
+config.fileLoadBatchSize=200
+
+## daphne crm interface address
+daphne.crm.address=http://183.195.114.141:8888/Crm_Madhouse_App-Crm_Madhouse_Pro-context-root/Crm_Madhouse_WebSoapHttpPort?wsdl
+#daphne.crm.address=@daphne.crm.address@
+
+
+## wechat message id
+## wechat multi-sent message id of wp
+wechat.id.wpmessage=IjnlbhfE9BOJtNl28h4RuRPuixnH0EV1YHdYYtjSncI
+## wechat template message id of receiving shop coupons
+wechat.id.couponReceivedTemplate=FumB-92uAQxoG4RoO3Xj9Qe8pp4fsksg_QenKuI7cF8
+## wechat template message id of using shop coupons
+wechat.id.couponUsedTemplate=QztvTE-KSWxCK1mP3vhPCofXZDtTuKE5qgtZ4RCLrv4
+## wechat query token address,  
+wechat.tokenAddress=http://27.115.15.4/system/get_token.php?type=1
+#wechat.tokenAddress=http://daphne.onemad.com/system/tk.php
+#wechat.tokenAddress=@wechat.tokenAddress@
+
+### schedule configuration
+schedule.threadPoolSize=20
+#schedule.daphneFileMonitor.needClose=@schedule.daphneFileMonitor.needClose@
+#schedule.shopCouponImport.needClose=@schedule.shopCouponImport.needClose@
+#schedule.massMessage.needClose=@schedule.massMessage.needClose@
+#schedule.customMessage.needClose=@schedule.customMessage.needClose@
+#schedule.templateMessage.needClose=@schedule.templateMessage.needClose@
+#schedule.callCrmAPI.needClose=@schedule.callCrmAPI.needClose@
+#schedule.memberInfoAdjust.needClose=@schedule.memberInfoAdjust.needClose@
+#schedule.wechatUserReregister.needClose=@schedule.wechatUserReregister.needClose@
+#schedule.customerRecord.needClose=@schedule.customerRecord.needClose@
+schedule.daphneFileMonitor.needClose=1
+schedule.shopCouponImport.needClose=1
+schedule.massMessage.needClose=1
+schedule.customMessage.needClose=1
+schedule.templateMessage.needClose=1
+schedule.callCrmAPI.needClose=1
+schedule.memberInfoAdjust.needClose=1
+schedule.wechatUserReregister.needClose=1
+schedule.customerRecord.needClose=1
+## testing environment
+#schedule.daphneFileMonitor.cron=0/30 * * * * ?
+#schedule.shopCouponImport.cron=0/30 * * * * ?
+#schedule.massMessage.cron=0/30 * * * * ?
+#schedule.customMessage.cron=0/30 * * * * ?
+#schedule.templateMessage.cron=0/30 * * * * ?
+#schedule.callCrmAPI.cron=0 0/1 * * * ?
+#schedule.memberInfoAdjust.cron=0 0/1 * * * ?
+#schedule.wechatUserReregister.cron=0 0/1 * * * ?
+#schedule.customerRecord.cron=0 0/1 * * * ?
+## production environgment
+schedule.daphneFileMonitor.cron=0 0/30 * * * ?
+schedule.shopCouponImport.cron=0 0/1 * * * ?
+schedule.massMessage.cron=0 0/30 * * * ?
+schedule.customMessage.cron=0 0/3 * * * ?
+schedule.templateMessage.cron=0 0/3 * * * ?
+schedule.callCrmAPI.cron=0/10 * * * * ?
+schedule.memberInfoAdjust.cron=0 0 * * * ?
+schedule.wechatUserReregister.cron=0 0/30 * * * ?
+schedule.customerRecord.cron=0 0/5 * * * ?
+
+
+### 消息模板，用于发送微信用户消息
+message.filmTicket.claim=恭喜您获得有悦无限赠送的电影票{ticketNum}张，请<a href="@uiHostName@/daphnewp/piao.php">点击领取</a>。
+message.shopCoupon.view=恭喜您获得有悦无限赠送的千元礼包一份，请进入“个人中心”-“我的优惠”查看。
+message.shopCoupon.completeUserInfo=恭喜您获得有悦无限赠送的千元礼包一份，请进入“个人中心”绑定手机并完善个人资料，系统将在24小时内自动为您发放。
+message.completeUserInfo=请进入“个人中心”绑定手机并完善个人资料。
+message.shopCoupon.claim=恭喜您获得有悦无限赠送的千元礼包一份，请稍后进入“个人中心”-“我的优惠”查看。
+
+## 线下电影票发送优惠券的品牌列表，多个以,分开
+sendCoupons.limits.offline.brands=鞋柜,达芙妮
+## 指定需要发送优惠券的渠道，多个以,分开
+sendCoupons.limits.channels=87

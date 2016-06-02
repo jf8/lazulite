@@ -13,6 +13,7 @@
  */
 package com.daphne.lazulite.sys.auth.service;
 
+import com.daphne.lazulite.common.utils.SpringUtils;
 import com.daphne.lazulite.sys.group.service.GroupService;
 import com.daphne.lazulite.sys.organization.service.JobService;
 import com.daphne.lazulite.sys.organization.service.OrganizationService;
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.swing.*;
 import java.util.Set;
 
 /**
@@ -122,7 +124,8 @@ public class UserAuthService {
     }
 
     public Set<String> findStringRoles(User user) {
-        Set<Role> roles = ((UserAuthService) AopContext.currentProxy()).findRoles(user);
+
+        Set<Role> roles = ((UserAuthService) SpringUtils.getBean(UserAuthService.class)).findRoles(user);
         return Sets.newHashSet(Collections2.transform(roles, new Function<Role, String>() {
             @Override
             public String apply(Role input) {
@@ -140,7 +143,7 @@ public class UserAuthService {
     public Set<String> findStringPermissions(User user) {
         Set<String> permissions = Sets.newHashSet();
 
-        Set<Role> roles = ((UserAuthService) AopContext.currentProxy()).findRoles(user);
+        Set<Role> roles = ((UserAuthService) SpringUtils.getBean(UserAuthService.class)).findRoles(user);
         for (Role role : roles) {
             for (RoleResourcePermission rrp : role.getResourcePermissions()) {
                 Resource resource = resourceService.findOne(rrp.getResourceId());
