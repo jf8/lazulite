@@ -6,23 +6,15 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package com.daphne.lazulite.wechat.utils.location;
+package com.daphne.lazulite.wechat.service;
 
-public class Address {
+import org.apache.commons.lang3.RandomUtils;
 
-	private String address;
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	@Override
-	public String toString() {
-		return "Address [address=" + address + "]";
-	}
-	
+/**
+ * Created by junfu on 2016/6/2.
+ */
+public class test {
+    public static void main(String[] args) {
+        System.out.println(RandomUtils.nextInt(5,10));
+    }
 }
