@@ -41,8 +41,8 @@ public class CommonResultDto {
 	public void setData(Object data) {
 		this.data = data;
 	}
-	public static void main(String[] args) {
-		CommonResultDto obj = new CommonResultDto();
-		System.out.println(obj.getResult());
-	}
+//	public static void main(String[] args) {
+//		CommonResultDto obj = new CommonResultDto();
+//		System.out.println(obj.getResult());
+//	}
 }

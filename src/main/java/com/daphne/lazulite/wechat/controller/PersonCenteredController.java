@@ -8,8 +8,9 @@
 
 package com.daphne.lazulite.wechat.controller;
 
-import com.madhouse.daphne.dto.CommonResultDto;
-import com.madhouse.daphne.service.IPersonCenteredService;
+import com.daphne.lazulite.wechat.dto.CommonResultDto;
+import com.daphne.lazulite.wechat.service.WePersonCenteredService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -22,10 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
-@RequestMapping(value="/personCentered")
+@RequestMapping(value="api/wechat/personCentered")
 public class PersonCenteredController {
 	@Autowired
-	private IPersonCenteredService personCenteredService;
+	private WePersonCenteredService personCenteredService;
 	/**
 	 * 跳转到个人中心页面
 	 * @param request

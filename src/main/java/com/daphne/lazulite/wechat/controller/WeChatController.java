@@ -25,7 +25,7 @@ import java.io.IOException;
  *
  */
 @Controller
-@RequestMapping(value="/wechat")
+@RequestMapping(value="api/wechat")
 public class WeChatController {
 	private Logger logger = LoggerFactory.getLogger(WeChatController.class);
 	/**

@@ -51,7 +51,7 @@ public class DynamicTaskApiImpl implements DynamicTaskApi {
     private ApplicationContext applicationContext;
     
 
-    @PostConstruct
+    //@PostConstruct
     public void initTask() { //系统启动后，自动加载任务
         List<Long> ids = Lists.newArrayList();
         for(TaskDefinition td : taskDefinitionService.findAll()) {

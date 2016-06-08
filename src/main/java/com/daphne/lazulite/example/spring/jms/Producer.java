@@ -26,10 +26,7 @@ public class Producer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		for (int i = 0; i < 10; i++) {
-			Thread.sleep(2000);
-			send("Sample message"+i);
-		}
+		send("Sample message");
 		System.out.println("Message was sent to the Queue");
 	}
 

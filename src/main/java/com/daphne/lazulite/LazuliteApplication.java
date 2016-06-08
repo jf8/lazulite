@@ -1,5 +1,6 @@
 package com.daphne.lazulite;
 
+import com.daphne.lazulite.wechat.MadhouseConfigureLoader;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -44,6 +45,12 @@ public class LazuliteApplication  {
 	public TaskScheduler taskScheduler(){
 		TaskScheduler taskScheduler=new ThreadPoolTaskScheduler();
 		return taskScheduler;
+	}
+
+	@Bean
+	public MadhouseConfigureLoader madhouseConfigureLoader(){
+		MadhouseConfigureLoader madhouseConfigureLoader=new MadhouseConfigureLoader("/properties/url.properties");
+		return madhouseConfigureLoader;
 	}
 
 }

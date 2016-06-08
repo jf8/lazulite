@@ -8,11 +8,12 @@
 
 package com.daphne.lazulite.wechat.service.util;
 
-import com.madhouse.daphne.dao.model.Member;
-import com.madhouse.daphne.utils.CommonUtils;
+
+import com.daphne.lazulite.wechat.entity.WeMember;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Member service tools class, 
+ * WeMember service tools class,
  * @ClassName: MemberServiceUtil 
  * @author Walter.xu
  * @date 2015年7月25日 上午10:38:19
@@ -23,10 +24,10 @@ public class MemberServiceUtil {
 	 * @param member
 	 * @return
 	 */
-	public static boolean isUserInfCompleted(Member member){
-		if (member!=null&&!CommonUtils.isEmpty(member.getName())&&
-				!CommonUtils.isEmpty(member.getPhonenum())&&member.getBirthday()!=null&&
-				!CommonUtils.isEmpty(member.getSex())) {
+	public static boolean isUserInfCompleted(WeMember member){
+		if (member!=null&&!StringUtils.isEmpty(member.getName())&&
+				!StringUtils.isEmpty(member.getPhoneNum())&&member.getBirthday()!=null&&
+				!StringUtils.isEmpty(member.getSex())) {
 			return true;
 		}
 		return false;

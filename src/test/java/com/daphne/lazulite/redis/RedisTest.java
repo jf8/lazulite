@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import javax.sql.DataSource;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -24,6 +25,8 @@ public class RedisTest extends LazuliteApplicationTests {
 
     @Autowired
     private StringRedisTemplate template;
+    @Autowired
+    private DataSource ds;
 
     @Test
     public void TestRedis(){
@@ -31,7 +34,7 @@ public class RedisTest extends LazuliteApplicationTests {
         vo.set("person","junfu.chen");
         System.out.println(vo.get("person"));
 
-
+        System.out.println(ds.getClass());
 
     }
 

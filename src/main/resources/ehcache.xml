@@ -48,4 +48,14 @@
 		   maxEntriesLocalHeap="200"
 		   timeToLiveSeconds="600">
 	</cache>
+
+
+	<cache name="memberCache"
+		   maxEntriesLocalHeap="10000"
+		   overflowToDisk="false"
+		   eternal="false"
+		   diskPersistent="false"
+		   timeToLiveSeconds="0"
+		   timeToIdleSeconds="0"
+		   statistics="true"/>
 </ehcache>

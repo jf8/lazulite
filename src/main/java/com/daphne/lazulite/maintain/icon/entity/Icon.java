@@ -57,7 +57,7 @@ public class Icon extends BaseEntity<Long> {
     /**
      * 距离sprite图片左边多少
      */
-    @Column(name = "left")
+    @Column(name = "left_offset")
     private Integer left;
 
     /**

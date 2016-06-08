@@ -8,8 +8,10 @@
 
 package com.daphne.lazulite.wechat.service.util;
 
-import com.madhouse.daphne.dao.model.Member;
-import com.madhouse.daphne.dao.model.Message;
+
+
+import com.daphne.lazulite.wechat.entity.WeMember;
+import com.daphne.lazulite.wechat.entity.WeMessage;
 
 import java.io.Serializable;
 
@@ -89,14 +91,14 @@ public class MessageResponseEntity implements Serializable{
 	public void setReferenceID(Integer referenceID) {
 		this.referenceID = referenceID;
 	}
-	public void setMember(Member member){
+	public void setMember(WeMember member){
 		if (member!=null) {
 			this.id = member.getId();
 			this.memberID = member.getMemberId();
 			this.openID = member.getWechatId();
 		}
 	}
-	public void setMessage(Message message){
+	public void setMessage(WeMessage message){
 		if (message!=null) {
 			this.messageID = message.getId();
 			this.message = message.getMessage();

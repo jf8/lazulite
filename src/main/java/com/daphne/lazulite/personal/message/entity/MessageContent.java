@@ -17,10 +17,7 @@ import com.daphne.lazulite.common.entity.BaseEntity;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 消息内容
@@ -41,6 +38,7 @@ public class MessageContent extends BaseEntity<Long> {
      * 消息内容
      */
     @Length(min = 5, max = 50000, message = "{length.not.valid}")
+    @Lob
     private String content;
 
 

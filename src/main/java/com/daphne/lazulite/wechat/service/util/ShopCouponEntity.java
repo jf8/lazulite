@@ -8,8 +8,9 @@
 
 package com.daphne.lazulite.wechat.service.util;
 
-import com.madhouse.daphne.dao.model.Activity;
-import com.madhouse.daphne.dao.model.Member;
+
+import com.daphne.lazulite.wechat.entity.WeActivity;
+import com.daphne.lazulite.wechat.entity.WeMember;
 
 import java.io.Serializable;
 
@@ -27,19 +28,19 @@ public class ShopCouponEntity implements Serializable{
 	private int messageID;
 	private String messageType;
 	private Integer activityID;
-	private String crmActivityID;
+	//private String crmActivityID;
 	private int failureCount = 0;
 	
-	public void setMember(Member member){
+	public void setMember(WeMember member){
 		if (member!=null) {
 			this.id= member.getId();
 			this.memberID = member.getMemberId();
 		}
 	}
-	public void setActivity(Activity activity){
+	public void setActivity(WeActivity activity){
 		if (activity!=null) {
 			this.activityID = activity.getId();
-			this.crmActivityID = activity.getCouponActivityId();
+			//this.crmActivityID = activity.getCouponActivityId();
 		}
 	}
 	public String getMemberID() {
@@ -73,12 +74,12 @@ public class ShopCouponEntity implements Serializable{
 	public void setActivityID(Integer activityID) {
 		this.activityID = activityID;
 	}
-	public String getCrmActivityID() {
-		return crmActivityID;
-	}
-	public void setCrmActivityID(String crmActivityID) {
-		this.crmActivityID = crmActivityID;
-	}
+//	public String getCrmActivityID() {
+//		return crmActivityID;
+//	}
+//	public void setCrmActivityID(String crmActivityID) {
+//		this.crmActivityID = crmActivityID;
+//	}
 	public int getFailureCount() {
 		return failureCount;
 	}
@@ -90,6 +91,6 @@ public class ShopCouponEntity implements Serializable{
 	}
 	@Override
 	public String toString(){
-		return "id="+id+", memberID="+memberID+", "+"memberID="+memberID+",activityID="+activityID+",crmActivityID="+crmActivityID;
+		return "id="+id+", memberID="+memberID+", "+"memberID="+memberID+",activityID="+activityID;
 	}
 }

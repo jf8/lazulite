@@ -8,7 +8,7 @@
 
 package com.daphne.lazulite.wechat.controller;
 
-import com.daphne.lazulite.wechat.service.MenuService;
+import com.daphne.lazulite.wechat.service.WeMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class MenuController {
 
 	@Autowired
-	private MenuService menuService;
+	private WeMenuService menuService;
 
 	
 	@RequestMapping(value="/createMenu")

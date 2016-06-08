@@ -21,6 +21,8 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method />
+    <method>
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>
