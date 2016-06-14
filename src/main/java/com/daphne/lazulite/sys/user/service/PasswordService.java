@@ -18,9 +18,13 @@ import com.daphne.lazulite.sys.user.entity.User;
 import com.daphne.lazulite.sys.user.exception.UserPasswordNotMatchException;
 import com.daphne.lazulite.sys.user.exception.UserPasswordRetryLimitExceedException;
 import com.daphne.lazulite.sys.user.utils.UserLogUtils;
+import com.lazulite.spring.boot.autoconfig.shiro.ShiroProperties;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import org.apache.shiro.crypto.hash.Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,9 @@ public class PasswordService {
 
     @Autowired
     private CacheManager ehcacheManager;
+
+    @Autowired
+    private ShiroProperties shiroProperties;
 
     private Cache loginRecordCache;
 
@@ -93,7 +100,9 @@ public class PasswordService {
 
 
     public String encryptPassword(String username, String password, String salt) {
-        return Md5Utils.hash(username + password + salt);
+        Hash hash=new SimpleHash("MD5", password, ByteSource.Util.bytes(username+salt), shiroProperties.getHashIterations());
+        String encodedPassword = hash.toHex();
+        return encodedPassword;
     }
 
 

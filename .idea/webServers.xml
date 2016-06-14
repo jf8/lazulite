@@ -9,6 +9,20 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="e13e4b44-a1d1-4ae8-b221-c9d1398ba152" name="tes" url="http://192.168.184.120">
+        <fileTransfer host="192.168.184.120" port="22" accessType="SFTP" password="dfcedfcbdfdadfc2dfc4dfcf" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="ef8c5b47-1e0e-4bbf-9270-9da631827b42" name="nexus" url="http://192.168.184.47">
+        <fileTransfer host="192.168.184.47" port="22" accessType="SFTP" password="dfcedfcbdfdadfc2dfc4dfcf" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

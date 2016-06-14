@@ -52,6 +52,7 @@ public class WePersonCenteredService {
     private JmsMessagingTemplate jmsMessagingTemplate;
 
     public void getVerificationCode(String phoneNum,String openId) {
+        logger.info("phone:"+phoneNum+" openid:"+openId);
         if(StringUtils.isEmpty(phoneNum)){
             logger.info("getVerificationCode but have not a phone number!");
             return;
@@ -68,6 +69,7 @@ public class WePersonCenteredService {
         }
         String verificationCode = String.valueOf(RandomUtils.nextInt(100000,999999));
         boolean flag = sendSmsService.sendValidationSMS(phoneNum, verificationCode);
+        logger.info("sms result:"+flag);
         if(flag){
             /**
              * 设置短信验证码过期时间

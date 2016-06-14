@@ -8,12 +8,23 @@
 
 package com.daphne.lazulite.wechat;
 
+import com.daphne.lazulite.common.utils.SpringUtils;
+import com.daphne.lazulite.wechat.entity.WeMember;
+import com.daphne.lazulite.wechat.service.WeMemberService;
+import com.daphne.lazulite.wechat.service.thread.SubscribeThread;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.sword.wechat4j.WechatSupport;
+import org.sword.wechat4j.response.ArticleResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MyWechat extends WechatSupport {
 
@@ -194,16 +205,47 @@ public class MyWechat extends WechatSupport {
 	 */
 	@Override
 	protected void subscribe() {
-		String FromUserName = wechatRequest.getFromUserName();
-		//用户未关注时扫描二维码事件,会多一个EventKey和Ticket节点
-		String Ticket = wechatRequest.getTicket();
 
-		String result = "订阅事件FromUserName:" + FromUserName;
-		if(StringUtils.isNotBlank(Ticket)){
-			result = "扫描带场景值二维码事件FromUserName:" + FromUserName + ", Ticket:" + Ticket;
+		//如果是微票二维码过来的用户，发千元礼包图文列表，其他用户发文本消息
+		String eventKey = this.wechatRequest.getEventKey();//qrscene_为前缀
+		/**
+		 * 用户关注后，向达芙妮发送请求获取到会员号，然后向会员表中插入数据
+		 */
+		String openId = this.wechatRequest.getFromUserName();
+		try {
+			Integer channelQrcodeId = null;
+			if(!StringUtils.isEmpty(eventKey)){
+				channelQrcodeId = Integer.parseInt(eventKey.substring("qrscene_".length(), eventKey.length()));
+			}
+			responseText("您好，欢迎关注达芙妮测试号！");
+			saveUser(openId, channelQrcodeId);
+			logger.debug("Success to execute the user subscribe, OpenID="+openId+", eventKey="+eventKey);
+		} catch (Exception e) {
+			logger.error("Error to execute user subscribe, OpenID="+openId+", eventKey="+eventKey+", message="+e.getMessage(),e);
 		}
-		logger.info(result);
-		responseText(result);
+	}
+
+	private void saveUser(String openID, Integer channelQrcodeID){
+		WeMemberService memberService = SpringUtils.getBean(WeMemberService.class);
+		// 校验是否该用户已经在数据库中存在
+		WeMember targetMember = memberService.queryByOpenId(openID);
+		if (targetMember==null) {
+			// 创建对象并保存
+			targetMember = new WeMember();
+			targetMember.setWechatId(openID);
+			targetMember.setChannelQrcodeId(channelQrcodeID);
+			targetMember.setCreateTime(new Date());
+			memberService.save(targetMember);
+		}else{
+			// 为取消关注后再次关注，则只需修改状态即可
+			targetMember.setIsActive(1);
+			targetMember.setUpdateTime(new Date());
+			memberService.update(targetMember);
+			// 同时校验是否需要关注
+		}
+		// 调用线程完成注册已经调用
+		TaskExecutor threadpool = SpringUtils.getBean(TaskExecutor.class);
+		threadpool.execute(new SubscribeThread(targetMember));
 	}
 
 	/**
