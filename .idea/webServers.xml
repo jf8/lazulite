@@ -23,6 +23,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="2a54de14-f2c3-4ac3-8fa9-b09a36071e39" name="中间件" url="http://192.168.184.48">
+        <fileTransfer host="192.168.184.48" port="22" accessType="SFTP" password="dfcedfcbdfdadfc2dfc4dfcf" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

@@ -40,6 +40,4 @@ public class AccessToken extends Token {
 		logger.info("创建获取access_token url");
 		return url;
 	}
-	
-	
 }

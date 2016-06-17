@@ -10,7 +10,9 @@ package com.daphne.lazulite.wechat.service;
 
 import com.alibaba.fastjson.JSON;
 import com.daphne.lazulite.wechat.ButtonKey;
+import com.daphne.lazulite.wechat.WechatProperties;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.sword.wechat4j.event.EventType;
@@ -28,20 +30,8 @@ import java.util.List;
 public class WeMenuService {
 	private static Logger logger = Logger.getLogger(WeMenuService.class);
 
-
-
-	@Value("${web.nearShopUrl}")
-	String nearShopUrl;;
-
-	@Value("${web.personnalCenterUrl}")
-	String personnalCenterUrl;;
-
-
-	@Value("${web.myFavorableUrl}")
-	String myFavorableUrl;;
-
-	@Value("${web.toTheMallUrl}")
-	String toTheMallUrl;
+	@Autowired
+	private WechatProperties wechatProperties;
 
 	private MenuManager manager = new MenuManager();
 	 @PostConstruct
@@ -81,12 +71,12 @@ public class WeMenuService {
 		MenuButton toTheMall= new MenuButton();
 		toTheMall.setName("前往商城");
 		toTheMall.setType(EventType.view);
-		toTheMall.setUrl(toTheMallUrl);
+		toTheMall.setUrl(wechatProperties.getWebToTheMallUrl());
 		//附近门店
 		MenuButton nearbyShop= new MenuButton();
 		nearbyShop.setName("附近门店");
 		nearbyShop.setType(EventType.view);
-		nearbyShop.setUrl(nearShopUrl);
+		nearbyShop.setUrl(wechatProperties.getWebNearShopUrl());
 
 
 		List<MenuButton> subBut2 = new ArrayList<MenuButton>();
@@ -124,12 +114,12 @@ public class WeMenuService {
 		MenuButton personalCenter = new MenuButton();
 		personalCenter.setName("会员中心");
 		personalCenter.setType(EventType.view);
-		personalCenter.setUrl(personnalCenterUrl);
+		personalCenter.setUrl(wechatProperties.getWebPersonnalCenterUrl());
 
 		MenuButton myFavorable = new MenuButton();
 		myFavorable.setName("我的优惠");
 		myFavorable.setType(EventType.view);
-		myFavorable.setUrl(myFavorableUrl);
+		myFavorable.setUrl(wechatProperties.getWebMyFavorableUrl());
 
 		/*ViewButton pointExchange = new ViewButton();
 		pointExchange.setName("积分兑换");
@@ -168,10 +158,10 @@ public class WeMenuService {
 
 		try {
 			manager.create(menu);
-			System.out.println("菜单创建成功");
+			logger.info("菜单创建成功");
+			System.out.println();
 		} catch (WeChatException e) {
-			System.out.println("菜单创建失败");
-			e.printStackTrace();
+			logger.info("菜单创建失败",e);
 		}
 	}
 }

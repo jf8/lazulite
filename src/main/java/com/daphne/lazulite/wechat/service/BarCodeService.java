@@ -258,6 +258,7 @@ public class BarCodeService {
     public void createBarCode(BarCodeInfo barCodeInfo, HttpServletResponse response) throws ServletException {
     	byte[] bytes = null;
         ValueOperations<String,byte[]> ov= redisTemplate.opsForValue();
+        String cachePrefix="barcode_";
     	try {
         	// 读缓存
 
@@ -272,11 +273,10 @@ public class BarCodeService {
             if (msg == null) msg = "0123456789";
             // 先读缓存，如果存在，则直接赋值，否则，创建对象
 
-            bytes = ov.get(msg);
+            bytes = ov.get(cachePrefix+msg);
             if (bytes==null) {
             	 BarcodeUtil util = BarcodeUtil.getInstance();
                  BarcodeGenerator gen = util.createBarcodeGenerator(cfg);
-
                  ByteArrayOutputStream bout = new ByteArrayOutputStream(4096);
                  try {
                      if (format.equals(MimeTypes.MIME_SVG)) {
@@ -284,7 +284,6 @@ public class BarCodeService {
                          SVGCanvasProvider svg = new SVGCanvasProvider(false, orientation);
                          gen.generateBarcode(svg, msg);
                          org.w3c.dom.DocumentFragment frag = svg.getDOMFragment();
-
                          //Serialize SVG barcode
                          TransformerFactory factory = TransformerFactory.newInstance();
                          Transformer trans = factory.newTransformer();
@@ -322,7 +321,7 @@ public class BarCodeService {
                      }
                      bytes =bout.toByteArray();
                      // 设置缓存
-                     ov.set(msg,bytes);
+                     ov.set(cachePrefix+msg,bytes);
                    //  jedisCacheManager.setBarCode(msg, bytes);
                  } finally {
                      bout.close();
@@ -357,7 +356,6 @@ public class BarCodeService {
     }
 	/**
      * Check the request for the desired output format.
-     * @param request the request to use
      * @return MIME type of the desired output format.
      */
     protected String determineFormat(BarCodeInfo barCodeInfo) {
@@ -369,7 +367,6 @@ public class BarCodeService {
 
     /**
      * Build an Avalon Configuration object from the request.
-     * @param request the request to use
      * @return the newly built COnfiguration object
      * @todo Change to bean API
      */

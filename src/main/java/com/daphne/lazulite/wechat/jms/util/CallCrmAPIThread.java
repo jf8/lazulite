@@ -110,7 +110,7 @@ public class CallCrmAPIThread extends Thread{
 					if (!StringUtils.isEmpty(entity.getBirthday())) {
 						member.setBirthday(DateUtils.parseDate(entity.getBirthday(), "yyyy-MM-dd"));
 					}
-					member.setName( res.getName());
+					member.setName(res.getName());
 					member.setSex(res.getSex());
 					member.setShopCode(res.getShopcode());
 					member.setPhoneNum(res.getMobile());

@@ -9,7 +9,7 @@
 package com.daphne.lazulite.wechat.service;
 
 import com.daphne.crm.ws.client.entity.*;
-import com.daphne.lazulite.wechat.MadhouseConst;
+import com.daphne.lazulite.wechat.WechatProperties;
 import com.daphne.lazulite.wechat.service.util.ShopCouponEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,9 @@ public class DaphneInterfaceManager {
     @Autowired
     private SystemLogService systemLogService;
 
+    @Autowired
+    private WechatProperties wechatProperties;
+
     /**
      * 初始化接口实例
      */
@@ -36,7 +39,7 @@ public class DaphneInterfaceManager {
         if (service==null) {
             synchronized (DaphneInterfaceManager.class) {
                 if (service==null) {
-                    service = new DaphneCRMInterface(MadhouseConst.DAPHNE_CRM_WS_ADDRESS);
+                    service = new DaphneCRMInterface(wechatProperties.getDaphneCrmAddress());
                 }
             }
         }

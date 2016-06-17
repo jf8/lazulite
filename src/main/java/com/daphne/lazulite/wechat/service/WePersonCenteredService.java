@@ -9,11 +9,7 @@
 package com.daphne.lazulite.wechat.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.daphne.lazulite.wechat.WechatRedisManager;
-import com.daphne.lazulite.wechat.ActivemqQueueConfig;
-import com.daphne.lazulite.wechat.MadhouseConst;
-import com.daphne.lazulite.wechat.WechatUserInfo;
-import com.daphne.lazulite.wechat.WechatUtils;
+import com.daphne.lazulite.wechat.*;
 import com.daphne.lazulite.wechat.dto.CommonResultDto;
 import com.daphne.lazulite.wechat.entity.WeMember;
 import com.daphne.lazulite.wechat.service.util.CRMRequestEntity;
@@ -50,6 +46,8 @@ public class WePersonCenteredService {
     private WechatRedisManager redisManager;
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
+    @Autowired
+    private WechatProperties wechatProperties;
 
     public void getVerificationCode(String phoneNum,String openId) {
         logger.info("phone:"+phoneNum+" openid:"+openId);
@@ -74,7 +72,8 @@ public class WePersonCenteredService {
             /**
              * 设置短信验证码过期时间
              */
-            redisManager.setStringValue(phoneNum, verificationCode, MadhouseConst.DAPHNE_SMS_INVALID_TIME*60, TimeUnit.SECONDS);
+            redisManager.setStringValue(phoneNum, verificationCode,  Integer.valueOf(wechatProperties.getSmsInvalidTime())*60, TimeUnit.SECONDS);
+
             redisManager.setStringValue(ALLOWKEY,"ALREADY", 30,TimeUnit.SECONDS);
         }
     }

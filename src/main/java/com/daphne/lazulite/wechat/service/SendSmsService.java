@@ -8,7 +8,7 @@
 
 package com.daphne.lazulite.wechat.service;
 
-import com.daphne.lazulite.wechat.MadhouseConst;
+import com.daphne.lazulite.wechat.WechatProperties;
 import com.daphne.lazulite.wechat.entity.WeSystemLog;
 import com.daphne.lazulite.wechat.service.util.Base64;
 import com.madhouse.daphne.sms.client.Sender;
@@ -30,6 +30,9 @@ public class SendSmsService {
     @Autowired
     private SystemLogService systemLogService;
     private SenderSoap senderService = null;
+    @Autowired
+    private WechatProperties wechatProperties;
+
     /**
      * 发送短信<BR>
      * 1 调用daphne短信接口发送短信<BR>
@@ -51,7 +54,9 @@ public class SendSmsService {
         log.setCreateTime(new Date());
         try {
             String smsBody = formatSMSSoapBody();
-            smsBody = smsBody.replace("#{USERNAME}", MadhouseConst.DAPHNE_SMS_USERNAME).replace("#{PASSWORD}", MadhouseConst.DAPHNE_SMS_PASSWORD)
+
+
+            smsBody = smsBody.replace("#{USERNAME}", wechatProperties.getSmsUsername()).replace("#{PASSWORD}", wechatProperties.getSmsPassword())
                     .replace("#{MOBILE}", mobile).replace("#{CONTENT}", Base64.getBase64(content));
             String smsResponse = getSenderService().sendMessage(smsBody);
 
@@ -108,7 +113,8 @@ public class SendSmsService {
      * @return
      */
     public boolean sendValidationSMS(String mobile, String validateCode) {
-        String content = "您的验证码是："+validateCode+"，请尽快使用，验证码将在"+MadhouseConst.DAPHNE_SMS_INVALID_TIME+"分钟后失效，失效请重新获取。回复TD退订";
+        String content = "您的验证码是："+validateCode+"，请尽快使用，验证码将在"+wechatProperties.getSmsInvalidTime()+"分钟后失效，失效请重新获取。回复TD退订";
+
         return sendSMS(mobile, content);
     }
 
@@ -117,9 +123,10 @@ public class SendSmsService {
             synchronized (this) {
                 if (this.senderService==null) {
                     try {
-                        this.senderService = new Sender(new URL(MadhouseConst.DAPHNE_SMS_ADDRESS)).getSenderSoap();
+                        this.senderService = new Sender(new URL(wechatProperties.getSmsAddress())).getSenderSoap();
+
                     } catch (Exception e) {
-                        throw new IllegalArgumentException("Invalid SMS address: "+MadhouseConst.DAPHNE_SMS_ADDRESS);
+                        throw new IllegalArgumentException("Invalid SMS address: "+wechatProperties.getSmsAddress());
                     }
                 }
             }

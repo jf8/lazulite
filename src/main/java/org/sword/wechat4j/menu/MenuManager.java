@@ -34,6 +34,8 @@ public class MenuManager {
 		logger.info("创建菜单");
 		String resultStr = HttpUtils.post(MENU_CREATE_POST_URL+this.accessToken, JSON.toJSONString(menu));
 		WeChatUtil.isSuccess(resultStr);
+
+
 	}
 	
 	/**

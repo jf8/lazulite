@@ -71,12 +71,7 @@ public class MadhouseConst {
 	// Daphne接口WSDL地址
 	public static String DAPHNE_CRM_WS_ADDRESS = "http://116.247.121.54:8888/Crm_Madhouse_App-Crm_Madhouse_Pro-context-root/Crm_Madhouse_WebSoapHttpPort?wsdl";
 
-	/*
-	 * get value from configure files
-	 */
-	public static String getProperty(String key){
-		return MadhouseConfigureLoader.get(key);
-	}
+
 	//获取微信客服聊天记录时间间隔（分钟）
 	public static int WECHAT_CUSTOMER_RECORD_INTERVAL = 5;
 }
